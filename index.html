@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Biostar TV World</title>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<style>
+:root{
+  --bg: #000;
+  --card: #0c0c0c;
+  --neon: #0aff9d;
+}
+
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#fff;}
+*{box-sizing:border-box}
+
+/* HEADER */
+.header{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#111;
+  border-bottom:1px solid rgba(10,255,157,0.08);
+}
+.header-left{display:flex;align-items:center;gap:10px;}
+.header .brand{font-weight:700;font-size:16px;}
+.iconBtn{
+  background:transparent;border:1px solid var(--neon);color:var(--neon);
+  padding:6px 10px;border-radius:8px;cursor:pointer;
+}
+
+/* SEARCH */
+.search{display:flex;align-items:center;border:1px solid var(--neon);padding:4px 6px;border-radius:6px;}
+.search input{border:none;background:transparent;color:var(--neon);outline:none;width:140px;}
+
+/* CATEGORY TABS */
+.categoryRow{display:flex;gap:6px;padding:6px 4px;overflow-x:auto;}
+.cat{padding:6px 12px;border-radius:20px;border:1px solid var(--neon);color:var(--neon);white-space:nowrap;cursor:pointer;font-weight:600;}
+.cat:hover{background:rgba(10,255,157,0.08);}
+
+/* MAIN LAYOUT */
+.main{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:6px;
+}
+
+/* Video section */
+.videoSection{
+  display:none;
+  flex-direction:column;
+  gap:0px;
+}
+.videoCard{
+  position:relative;background:#111;border:1px solid rgba(10,255,157,0.1);border-radius:10px;
+  padding:24px;
+}
+video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
+.watermark{
+  position:absolute;right:120px;bottom:120px;width:70px;
+  opacity:0.3;pointer-events:none;
+}
+
+/* Channel info below video */
+.playInfo{display:flex;align-items:center;gap:10px;margin-top:6px;padding:6px;background:rgba(0,0,0,0.3);border-radius:8px;}
+.playInfo img{width:64px;height:64px;object-fit:cover;border-radius:6px;border:2px solid rgba(10,255,157,0.2);}
+.playInfo .title{font-weight:700;font-size:16px;}
+
+/* CHANNEL GRID */
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;padding:6px 0 40px;
+}
+.card{
+  background:#111;border-radius:10px;padding:8px;text-align:center;cursor:pointer;border:2px solid rgba(10,255,157,0.1);
+  transition:transform .1s,border-color .1s;
+}
+.card:hover{transform:translateY(-4px);border-color:var(--neon);}
+.card img{width:76px;height:76px;object-fit:cover;border-radius:6px;border:2px solid rgba(10,255,157,0.1);}
+.card .name{margin-top:6px;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;}
+
+/* FOOTER */
+.footer{text-align:center;padding:10px 0;border-top:1px solid rgba(10,255,157,0.05);}
+.footer img{width:22px;height:22px;vertical-align:middle;margin:0 6px;}
+
+/* PC Mode: two columns */
+@media(min-width:768px){
+  .main{flex-direction:row;align-items:flex-start;}
+  #videoSection{width:45%; display:none; flex-direction:column; gap:6px; position:sticky; top:70px;}
+  #gridContainer{width:55%;}
+}
+
+/* Mobile: sticky video at top when playing */
+@media(max-width:767px){
+  #videoSection.sticky{position:sticky;top:60px;z-index:30;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <button id="backBtn" class="iconBtn" style="display:none" onclick="onBack()">←</button>
+    <div class="brand">Biostar TV World</div>
+  </div>
+  <div class="search"><input id="search" placeholder="Search..." oninput="onSearch()"></div>
+</div>
+
+<!-- CATEGORY -->
+<div id="categories" class="categoryRow">
+  <div class="cat" onclick="filter('all')">All</div>
+  <div class="cat" onclick="filter('sports')">Sports</div>
+  <div class="cat" onclick="filter('movies')">Movies</div>
+  <div class="cat" onclick="filter('bangla')">Bangla</div>
+  <div class="cat" onclick="filter('kids')">Kids</div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main">
+  <!-- Video Section -->
+  <div id="videoSection" class="videoSection">
+    <div class="videoCard">
+      <video id="player" controls playsinline></video>
+      <img id="wm" class="watermark" src="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-300x190.webp">
+      <div id="playInfo" class="playInfo">
+        <img id="playLogo" src="" alt="logo">
+        <div class="title" id="playTitle">Channel Name</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Channel Grid -->
+  <div id="gridContainer">
+    <div id="grid" class="grid">Loading channels…</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">© Biostar TV World 2025<br>Developer By MD. Shinha Sarder & Hanif Sheikh</div>
+
+<script>
+let channels=[],filtered=[],hls=null;
+const playlistURL="https://raw.githack.com/abusaeeidx/Mrgify-BDIX-IPTV/main/playlist.m3u";
+const grid=document.getElementById('grid');
+const videoSection=document.getElementById('videoSection');
+const player=document.getElementById('player');
+const playLogo=document.getElementById('playLogo');
+const playTitle=document.getElementById('playTitle');
+const backBtn=document.getElementById('backBtn');
+const categories=document.getElementById('categories');
+
+/* LOAD PLAYLIST */
+async function loadPlaylist(){
+  try{
+    const res=await fetch(playlistURL);
+    const text=await res.text();
+    const lines=text.split(/\r?\n/);
+    channels=[];
+    for(let i=0;i<lines.length;i++){
+      const L=lines[i].trim();
+      if(!L) continue;
+      if(L.startsWith('#EXTINF')){
+        const name=(L.split(',')[1]||'Channel').trim();
+        const logoMatch=L.match(/tvg-logo="([^"]+)"/) || L.match(/logo="([^"]+)"/);
+        const logo=logoMatch?logoMatch[1]:'https://via.placeholder.com/120x120?text=TV';
+        let url=(lines[i+1]||'').trim();
+        if(!url.startsWith('http')) url='';
+        channels.push({name,logo,url});
+      }
+    }
+    filtered=channels.slice(); renderGrid();
+  }catch(e){grid.innerHTML='<div style="padding:20px;color:red">Failed to load playlist</div>';}
+}
+
+/* RENDER GRID */
+function renderGrid(){
+  grid.innerHTML='';
+  filtered.forEach((ch,idx)=>{
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML=`<img src="${ch.logo}" alt="${ch.name}"><div class="name">${ch.name}</div>`;
+    card.onclick=()=>onPlay(idx); grid.appendChild(card);
+  });
+}
+
+/* SEARCH */
+function onSearch(){
+  const q=document.getElementById('search').value.toLowerCase();
+  filtered=channels.filter(c=>c.name.toLowerCase().includes(q));
+  renderGrid();
+}
+
+/* CATEGORY FILTER */
+function filter(cat){
+  if(cat==='all'){filtered=channels.slice(); renderGrid(); return;}
+  filtered=channels.filter(c=>c.name.toLowerCase().includes(cat.toLowerCase()));
+  renderGrid();
+}
+
+/* PLAY CHANNEL */
+function onPlay(index){
+  const ch=filtered[index];
+  if(!ch) return;
+
+  videoSection.style.display='flex';
+  categories.style.display='none'; // hide categories while playing
+  backBtn.style.display='inline-block';
+  videoSection.classList.add('sticky'); // keep video sticky
+
+  playLogo.src=ch.logo; playTitle.textContent=ch.name;
+
+  if(hls){ try{hls.destroy();}catch(e){} hls=null; player.src=''; }
+
+  if(Hls.isSupported()){
+    hls=new Hls(); hls.loadSource(ch.url); hls.attachMedia(player);
+    hls.on(Hls.Events.MANIFEST_PARSED,()=>player.play().catch(()=>{}));
+  }else{player.src=ch.url; player.play().catch(()=>{});}
+}
+
+/* BACK BUTTON */
+function onBack(){
+  try{if(hls){hls.destroy(); hls=null;}}catch(e){}
+  player.pause(); player.src='';
+  videoSection.style.display='none';
+  categories.style.display='flex';
+  backBtn.style.display='none';
+  videoSection.classList.remove('sticky');
+}
+
+loadPlaylist();
+</script>
+</body>
+</html>
