@@ -1,9 +1,10 @@
-<!doctype html>
-<html lang="bn">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Biostar TV World</title>
+<!doctype html> 
+<html lang="bn"> 
+  <head> <meta charset="utf-8"> 
+    <meta name="google-site-verification" content="mJfeKwLuQa2NVq4sCvPBuE1zIe9lCJtVBE4PwuRfZCc" />
+     <meta name="viewport" content="width=device-width,initial-scale=1"> 
+     <link rel="icon" type="image/png" href="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-300x190.webp"> 
+     <title>Biostar TV World</title>
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
@@ -39,7 +40,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#fff;}
 .cat{padding:6px 12px;border-radius:20px;border:1px solid var(--neon);color:var(--neon);white-space:nowrap;cursor:pointer;font-weight:600;}
 .cat:hover{background:rgba(10,255,157,0.08);}
 
-/* MAIN LAYOUT */
+/* MAIN */
 .main{
   display:flex;
   flex-direction:column;
@@ -47,51 +48,53 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#fff;}
   padding:6px;
 }
 
-/* Video section */
-.videoSection{
-  display:none;
-  flex-direction:column;
-  gap:0px;
-}
+/* VIDEO SECTION */
+.videoSection{display:none;flex-direction:column;gap:0px;}
 .videoCard{
   position:relative;background:#111;border:1px solid rgba(10,255,157,0.1);border-radius:10px;
   padding:24px;
 }
 video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
 .watermark{
-  position:absolute;right:120px;bottom:120px;width:70px;
+  position:absolute;right:50px;bottom:150px;width:40px;
   opacity:0.3;pointer-events:none;
 }
 
-/* Channel info below video */
+/* PLAY INFO */
 .playInfo{display:flex;align-items:center;gap:10px;margin-top:6px;padding:6px;background:rgba(0,0,0,0.3);border-radius:8px;}
 .playInfo img{width:64px;height:64px;object-fit:cover;border-radius:6px;border:2px solid rgba(10,255,157,0.2);}
 .playInfo .title{font-weight:700;font-size:16px;}
 
-/* CHANNEL GRID */
+/* CHANNEL GRID — UPDATED SMALLER BOX */
 .grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;padding:6px 0 40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(95px,1fr));  /* smaller column width */
+  gap:8px;
+  padding:6px 0 40px;
 }
 .card{
-  background:#111;border-radius:10px;padding:8px;text-align:center;cursor:pointer;border:2px solid rgba(10,255,157,0.1);
+  background:#111;border-radius:10px;padding:6px;text-align:center;cursor:pointer;
+  border:2px solid rgba(10,255,157,0.1);
   transition:transform .1s,border-color .1s;
 }
 .card:hover{transform:translateY(-4px);border-color:var(--neon);}
-.card img{width:76px;height:76px;object-fit:cover;border-radius:6px;border:2px solid rgba(10,255,157,0.1);}
-.card .name{margin-top:6px;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;}
+.card img{width:60px;height:60px;object-fit:cover;border-radius:6px;border:2px solid rgba(10,255,157,0.1);}
+.card .name{
+  margin-top:4px;font-size:11px;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;
+}
 
 /* FOOTER */
 .footer{text-align:center;padding:10px 0;border-top:1px solid rgba(10,255,157,0.05);}
-.footer img{width:22px;height:22px;vertical-align:middle;margin:0 6px;}
 
-/* PC Mode: two columns */
+/* PC 2 COLUMN */
 @media(min-width:768px){
   .main{flex-direction:row;align-items:flex-start;}
   #videoSection{width:45%; display:none; flex-direction:column; gap:6px; position:sticky; top:70px;}
   #gridContainer{width:55%;}
 }
 
-/* Mobile: sticky video at top when playing */
+/* MOBILE STICKY VIDEO */
 @media(max-width:767px){
   #videoSection.sticky{position:sticky;top:60px;z-index:30;}
 }
@@ -117,9 +120,10 @@ video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
   <div class="cat" onclick="filter('kids')">Kids</div>
 </div>
 
-<!-- MAIN LAYOUT -->
+<!-- MAIN -->
 <div class="main">
-  <!-- Video Section -->
+
+  <!-- VIDEO -->
   <div id="videoSection" class="videoSection">
     <div class="videoCard">
       <video id="player" controls playsinline></video>
@@ -131,10 +135,11 @@ video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
     </div>
   </div>
 
-  <!-- Channel Grid -->
+  <!-- GRID -->
   <div id="gridContainer">
     <div id="grid" class="grid">Loading channels…</div>
   </div>
+
 </div>
 
 <!-- FOOTER -->
@@ -151,7 +156,6 @@ const playTitle=document.getElementById('playTitle');
 const backBtn=document.getElementById('backBtn');
 const categories=document.getElementById('categories');
 
-/* LOAD PLAYLIST */
 async function loadPlaylist(){
   try{
     const res=await fetch(playlistURL);
@@ -171,54 +175,56 @@ async function loadPlaylist(){
       }
     }
     filtered=channels.slice(); renderGrid();
-  }catch(e){grid.innerHTML='<div style="padding:20px;color:red">Failed to load playlist</div>';}
+  }catch(e){
+    grid.innerHTML='<div style="padding:20px;color:red">Failed to load playlist</div>';
+  }
 }
 
-/* RENDER GRID */
 function renderGrid(){
   grid.innerHTML='';
   filtered.forEach((ch,idx)=>{
-    const card=document.createElement('div'); card.className='card';
+    const card=document.createElement('div'); 
+    card.className='card';
     card.innerHTML=`<img src="${ch.logo}" alt="${ch.name}"><div class="name">${ch.name}</div>`;
-    card.onclick=()=>onPlay(idx); grid.appendChild(card);
+    card.onclick=()=>onPlay(idx);
+    grid.appendChild(card);
   });
 }
 
-/* SEARCH */
 function onSearch(){
   const q=document.getElementById('search').value.toLowerCase();
   filtered=channels.filter(c=>c.name.toLowerCase().includes(q));
   renderGrid();
 }
 
-/* CATEGORY FILTER */
 function filter(cat){
-  if(cat==='all'){filtered=channels.slice(); renderGrid(); return;}
-  filtered=channels.filter(c=>c.name.toLowerCase().includes(cat.toLowerCase()));
+  if(cat==='all'){filtered=channels.slice()}
+  else{filtered=channels.filter(c=>c.name.toLowerCase().includes(cat))}
   renderGrid();
 }
 
-/* PLAY CHANNEL */
 function onPlay(index){
-  const ch=filtered[index];
-  if(!ch) return;
+  const ch=filtered[index]; if(!ch) return;
 
   videoSection.style.display='flex';
-  categories.style.display='none'; // hide categories while playing
+  categories.style.display='none';
   backBtn.style.display='inline-block';
-  videoSection.classList.add('sticky'); // keep video sticky
+  videoSection.classList.add('sticky');
 
-  playLogo.src=ch.logo; playTitle.textContent=ch.name;
+  playLogo.src=ch.logo; 
+  playTitle.textContent=ch.name;
 
   if(hls){ try{hls.destroy();}catch(e){} hls=null; player.src=''; }
 
   if(Hls.isSupported()){
     hls=new Hls(); hls.loadSource(ch.url); hls.attachMedia(player);
     hls.on(Hls.Events.MANIFEST_PARSED,()=>player.play().catch(()=>{}));
-  }else{player.src=ch.url; player.play().catch(()=>{});}
+  }else{
+    player.src=ch.url; 
+    player.play().catch(()=>{});
+  }
 }
 
-/* BACK BUTTON */
 function onBack(){
   try{if(hls){hls.destroy(); hls=null;}}catch(e){}
   player.pause(); player.src='';
