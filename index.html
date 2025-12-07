@@ -5,19 +5,15 @@
      <meta name="viewport" content="width=device-width,initial-scale=1"> 
      <link rel="icon" type="image/png" href="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-300x190.webp"> 
      <title>Biostar TV World</title>
-
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
 <style>
 :root{
   --bg: #000;
   --card: #0c0c0c;
   --neon: #0aff9d;
 }
-
 body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#fff;}
 *{box-sizing:border-box}
-
 /* HEADER */
 .header{
   position:sticky;top:0;z-index:50;
@@ -30,16 +26,13 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#fff;}
   background:transparent;border:1px solid var(--neon);color:var(--neon);
   padding:6px 10px;border-radius:8px;cursor:pointer;
 }
-
 /* SEARCH */
 .search{display:flex;align-items:center;border:1px solid var(--neon);padding:4px 6px;border-radius:6px;}
 .search input{border:none;background:transparent;color:var(--neon);outline:none;width:140px;}
-
 /* CATEGORY TABS */
 .categoryRow{display:flex;gap:6px;padding:6px 4px;overflow-x:auto;}
 .cat{padding:6px 12px;border-radius:20px;border:1px solid var(--neon);color:var(--neon);white-space:nowrap;cursor:pointer;font-weight:600;}
 .cat:hover{background:rgba(10,255,157,0.08);}
-
 /* MAIN */
 .main{
   display:flex;
@@ -47,24 +40,51 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#fff;}
   gap:6px;
   padding:6px;
 }
-
-/* VIDEO SECTION */
-.videoSection{display:none;flex-direction:column;gap:0px;}
-.videoCard{
-  position:relative;background:#111;border:1px solid rgba(10,255,157,0.1);border-radius:10px;
-  padding:24px;
+/* VIDEO SECTION FIX: Video Full Screen Box */
+video#player{
+  width:100%;
+  height:320px;         /* Increased full height */
+  border-radius:8px;
+  object-fit:cover;     /* Full screen feel */
 }
-video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
+/* WATERMARK */
 .watermark{
-  position:absolute;right:50px;bottom:150px;width:40px;
-  opacity:0.3;pointer-events:none;
+  position:absolute;
+  right:100px;     /* Updated */
+  bottom:150px;
+  width:60px;      /* Updated */
+  opacity:0.3;
+  pointer-events:none;
 }
 
+/* Channel Grid Full Row & Column Layout */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); /* Bigger full-grid */
+  gap:10px;
+  padding:10px 0 50px;
+}
+
+.card img{
+  width:80px;
+  height:80px;
+}
+
+/* PC full size video box */
+@media(min-width:768px){
+  #videoSection{
+    width:100%;          /* FULL width video */
+    position:sticky;
+    top:70px;
+  }
+  #gridContainer{
+    width:100%;          /* Channel full width grid */
+  }
+}
 /* PLAY INFO */
 .playInfo{display:flex;align-items:center;gap:10px;margin-top:6px;padding:6px;background:rgba(0,0,0,0.3);border-radius:8px;}
 .playInfo img{width:64px;height:64px;object-fit:cover;border-radius:6px;border:2px solid rgba(10,255,157,0.2);}
 .playInfo .title{font-weight:700;font-size:16px;}
-
 /* CHANNEL GRID — UPDATED SMALLER BOX */
 .grid{
   display:grid;
@@ -83,17 +103,14 @@ video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
   margin-top:4px;font-size:11px;font-weight:700;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;
 }
-
 /* FOOTER */
 .footer{text-align:center;padding:10px 0;border-top:1px solid rgba(10,255,157,0.05);}
-
 /* PC 2 COLUMN */
 @media(min-width:768px){
   .main{flex-direction:row;align-items:flex-start;}
   #videoSection{width:45%; display:none; flex-direction:column; gap:6px; position:sticky; top:70px;}
   #gridContainer{width:55%;}
 }
-
 /* MOBILE STICKY VIDEO */
 @media(max-width:767px){
   #videoSection.sticky{position:sticky;top:60px;z-index:30;}
@@ -101,7 +118,6 @@ video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
 </style>
 </head>
 <body>
-
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
@@ -110,7 +126,6 @@ video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
   </div>
   <div class="search"><input id="search" placeholder="Search..." oninput="onSearch()"></div>
 </div>
-
 <!-- CATEGORY -->
 <div id="categories" class="categoryRow">
   <div class="cat" onclick="filter('all')">All</div>
@@ -119,10 +134,8 @@ video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
   <div class="cat" onclick="filter('bangla')">Bangla</div>
   <div class="cat" onclick="filter('kids')">Kids</div>
 </div>
-
 <!-- MAIN -->
 <div class="main">
-
   <!-- VIDEO -->
   <div id="videoSection" class="videoSection">
     <div class="videoCard">
@@ -134,17 +147,13 @@ video#player{width:100%;height:250px;border-radius:8px;object-fit:contain;}
       </div>
     </div>
   </div>
-
   <!-- GRID -->
   <div id="gridContainer">
     <div id="grid" class="grid">Loading channels…</div>
   </div>
-
 </div>
-
 <!-- FOOTER -->
 <div class="footer">© Biostar TV World 2025<br>Developer By MD. Shinha Sarder & Hanif Sheikh</div>
-
 <script>
 let channels=[],filtered=[],hls=null;
 const playlistURL="https://raw.githack.com/abusaeeidx/Mrgify-BDIX-IPTV/main/playlist.m3u";
@@ -155,7 +164,6 @@ const playLogo=document.getElementById('playLogo');
 const playTitle=document.getElementById('playTitle');
 const backBtn=document.getElementById('backBtn');
 const categories=document.getElementById('categories');
-
 async function loadPlaylist(){
   try{
     const res=await fetch(playlistURL);
@@ -179,7 +187,6 @@ async function loadPlaylist(){
     grid.innerHTML='<div style="padding:20px;color:red">Failed to load playlist</div>';
   }
 }
-
 function renderGrid(){
   grid.innerHTML='';
   filtered.forEach((ch,idx)=>{
@@ -190,32 +197,25 @@ function renderGrid(){
     grid.appendChild(card);
   });
 }
-
 function onSearch(){
   const q=document.getElementById('search').value.toLowerCase();
   filtered=channels.filter(c=>c.name.toLowerCase().includes(q));
   renderGrid();
 }
-
 function filter(cat){
   if(cat==='all'){filtered=channels.slice()}
   else{filtered=channels.filter(c=>c.name.toLowerCase().includes(cat))}
   renderGrid();
 }
-
 function onPlay(index){
   const ch=filtered[index]; if(!ch) return;
-
   videoSection.style.display='flex';
   categories.style.display='none';
   backBtn.style.display='inline-block';
   videoSection.classList.add('sticky');
-
   playLogo.src=ch.logo; 
   playTitle.textContent=ch.name;
-
   if(hls){ try{hls.destroy();}catch(e){} hls=null; player.src=''; }
-
   if(Hls.isSupported()){
     hls=new Hls(); hls.loadSource(ch.url); hls.attachMedia(player);
     hls.on(Hls.Events.MANIFEST_PARSED,()=>player.play().catch(()=>{}));
@@ -224,7 +224,6 @@ function onPlay(index){
     player.play().catch(()=>{});
   }
 }
-
 function onBack(){
   try{if(hls){hls.destroy(); hls=null;}}catch(e){}
   player.pause(); player.src='';
@@ -233,7 +232,6 @@ function onBack(){
   backBtn.style.display='none';
   videoSection.classList.remove('sticky');
 }
-
 loadPlaylist();
 </script>
 </body>
