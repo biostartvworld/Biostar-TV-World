@@ -12,10 +12,10 @@
 <link rel="stylesheet" href="https://eamintalukdar.pages.dev/bdixtv/css/style.css">
 <style>
 body{margin:0;font-family:Arial,sans-serif;color:#fff;background:linear-gradient(135deg,#050505,#0a0a0a,#000,#0a0a0a,#050505);background-size:400% 400%;animation:moveBG 18s infinite linear;}
-@keyframes moveBG{0%{background-position:0 0;}50%{background-position:400% 400%;}100%{background-position:0 0;}}
+@keyframes moveBG{0%{background-position:0 0;}100%{background-position:400% 400%;}100%{background-position:0 0;}}
 .glass{background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 20px rgba(0,255,200,0.1);}
 header{width:100%;padding:12px;background:#0a0a0a;border-bottom:2px solid #131313;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;box-shadow:0 0 10px #000;}
-.backBtn{background:#0c0c0c;border:1px solid #1a1a1a;padding:6px 12px;border-radius:6px;cursor:pointer;color:#fff;transition:.2s;}
+.backBtn{background:#0c0c0c;border:1px solid #1a1a1a;padding:6px 12px;border-radius:6px;cursor:pointer;color:#fff;transition:.2s;display:none;}
 .backBtn:hover{background:#111;border-color:#0aff9d;}
 .title{font-size:20px;font-weight:bold;letter-spacing:1px;color:#0aff9d;text-transform:uppercase;}
 .searchIcon{font-size:22px;cursor:pointer;}
@@ -25,24 +25,24 @@ header{width:100%;padding:12px;background:#0a0a0a;border-bottom:2px solid #13131
 #playerBox{width:100%;display:none;position:sticky;top:60px;z-index:900;}
 #playerWrap{position:relative;background:#000;}
 #video{width:100%;max-height:320px;background:#000;}
-#watermark{position:absolute;bottom:10px;right:30px;width:70px;opacity:.85;}
+#watermark{position:absolute;bottom:30px;right:40px;width:70px;opacity:.85;}
 #currentInfo{display:flex;gap:10px;align-items:center;padding:12px;background:#0b0b0b;border-top:1px solid #111;}
-#currentLogo{width:45px;border-radius:8px;}
+#currentLogo{width:45px;border-radius:8px;background:#fff;padding:3px;}
 #categoryTabs{display:flex;gap:8px;overflow-x:auto;padding:10px 12px;margin-bottom:8px;position:sticky;top:0;background:#fff;z-index:10;-webkit-overflow-scrolling:touch;}
 #categoryTabs::-webkit-scrollbar{display:none;}
 .categoryBtn{flex:0 0 auto;padding:6px 14px;border-radius:20px;border:none;cursor:pointer;background:#fff;color:#0a0a0a;font-weight:bold;transition:.2s;white-space:nowrap;font-size:14px;}
 .categoryBtn.active,.categoryBtn:hover{background:#0aff9d;color:#000;}
-#channelBox{background:#fff;color:#000;padding:12px;border-radius:12px;margin:12px;max-height:calc(100vh - 115px);overflow-y:auto;}
+#channelBox{background:rgba(255,255,255,0.9);color:#000;padding:12px;border-radius:12px;margin:12px;max-height:calc(100vh - 115px);overflow-y:auto;}
 #list{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
-.channelItem{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,0.1);padding:10px;border-radius:12px;text-align:center;cursor:pointer;transition:.2s;}
+.channelItem{background:rgba(255,255,255,0.5);backdrop-filter:blur(6px);border:1px solid rgba(0,0,0,0.1);padding:10px;border-radius:12px;text-align:center;cursor:pointer;transition:.2s;}
 .channelItem:hover{transform:scale(1.05);border-color:#0aff9d;box-shadow:0 0 15px rgba(0,255,200,0.2);}
-.channelItem img{width:60px;height:60px;border-radius:10px;}
+.channelItem img{width:60px;height:60px;border-radius:10px;background:#fff;padding:3px;}
 .channelName{margin-top:8px;font-size:14px;}
 footer{text-align:center;padding:12px;background:#0a0a0a;color:#0aff9d;font-size:14px;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;}
 footer img{width:25px;}
 @media(min-width:1000px){
 #container{flex-direction:row;}
-#playerBox{width:100%;display:none;position:sticky;top:60px;}
+#playerBox{width:100%;position:sticky;top:100px;}
 #channelBox{width:100%;max-height:100vh;overflow-y:auto;}
 #playerWrap video{max-height:none;}
 }
@@ -50,7 +50,7 @@ footer img{width:25px;}
 </head>
 <body>
 <header class="glass">
-<div class="backBtn" onclick="goBack()">⟵ Back</div>
+<div class="backBtn" id="backBtn" onclick="goBack()">⟵ Back</div>
 <div class="title">Biostar TV World</div>
 <div class="searchIcon" onclick="toggleSearch()">🔍</div>
 </header>
@@ -85,9 +85,9 @@ function parseM3U(data){let lines=data.split("\n");for(let i=0;i<lines.length;i+
 function renderCategories(){const tabs=document.getElementById("categoryTabs");tabs.innerHTML="";categories.forEach(c=>{let btn=document.createElement("button");btn.className="categoryBtn";btn.innerText=c;btn.onclick=()=>filterCategory(c);if(c==="All")btn.classList.add("active");tabs.appendChild(btn);});}
 function filterCategory(cat){document.querySelectorAll(".categoryBtn").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".categoryBtn").forEach(b=>{if(b.innerText===cat)b.classList.add("active");});if(cat==="All")renderList(channels);else renderList(channels.filter(ch=>ch.category===cat));}
 function renderList(list){const box=document.getElementById("list");box.innerHTML="";list.forEach(c=>{let item=document.createElement("div");item.className="channelItem glass";item.innerHTML=`<img src="${c.logo}"><div class="channelName">${c.name}</div>`;item.onclick=()=>playChannel(c);box.appendChild(item);});}
-function playChannel(ch){document.getElementById("playerBox").style.display="block";const video=document.getElementById("video");const logo=document.getElementById("currentLogo");const name=document.getElementById("currentName");logo.src=ch.logo;name.innerText=ch.name;if(Hls.isSupported()){var hls=new Hls();hls.loadSource(ch.url);hls.attachMedia(video);}else{video.src=ch.url;}window.scrollTo({top:0,behavior:"smooth"});}
+function playChannel(ch){document.getElementById("playerBox").style.display="block";document.getElementById("backBtn").style.display="block";const video=document.getElementById("video");const logo=document.getElementById("currentLogo");const name=document.getElementById("currentName");logo.src=ch.logo;name.innerText=ch.name;if(Hls.isSupported()){var hls=new Hls();hls.loadSource(ch.url);hls.attachMedia(video);}else{video.src=ch.url;}window.scrollTo({top:0,behavior:"smooth"});}
 function searchChannel(){let v=document.querySelector(".searchBox").value.toLowerCase();let f=channels.filter(c=>c.name.toLowerCase().includes(v));renderList(f);}
-function goBack(){document.getElementById("playerBox").style.display="none";window.scrollTo({top:0,behavior:"smooth"});}
+function goBack(){document.getElementById("playerBox").style.display="none";document.getElementById("backBtn").style.display="none";window.scrollTo({top:0,behavior:"smooth"});}
 loadPlaylist();
 </script>
 </body>
