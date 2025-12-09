@@ -5,345 +5,90 @@
 <meta name="google-site-verification" content="mJfeKwLuQa2NVq4sCvPBuE1zIe9lCJtVBE4PwuRfZCc" />
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/png" href="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-300x190.webp">
-
 <title>Biostar TV World</title>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
+<link rel="stylesheet" href="https://eamintalukdar.pages.dev/bdixtv/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://eamintalukdar.pages.dev/bdixtv/css/video-js.css">
+<link rel="stylesheet" href="https://eamintalukdar.pages.dev/bdixtv/css/style.css">
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#000;
-  color:#fff;
-}
-*{ box-sizing:border-box }
-
-/* HEADER */
-.header{
-  position:sticky;
-  top:0;
-  z-index:50;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 14px;
-  background:#111;
-}
-.brand{font-weight:700;font-size:16px;}
-.iconBtn{
-  background:transparent;
-  border:1px solid #0aff9d;
-  color:#0aff9d;
-  padding:5px 10px;
-  border-radius:8px;
-  cursor:pointer;
-}
-.search{
-  display:flex;
-  align-items:center;
-  border:1px solid #0aff9d;
-  padding:4px 6px;
-  border-radius:6px;
-}
-.search input{
-  background:transparent;
-  border:none;
-  outline:none;
-  color:#0aff9d;
-}
-
-/* CATEGORY (mobile) */
-.categoryRow{
-  display:flex;
-  gap:6px;
-  padding:6px 4px;
-  overflow-x:auto;
-  background:#000;
-}
-.cat{
-  padding:6px 12px;
-  border:1px solid #0aff9d;
-  border-radius:20px;
-  cursor:pointer;
-  white-space:nowrap;
-  color:#0aff9d;
-  font-weight:600;
-}
-
-/* VIDEO SECTION */
-#videoSection{
-  width:100%;
-  display:none; 
-  flex-direction:column;
-  position:sticky;
-  top:60px;
-  z-index:30;
-}
-
-.videoCard{
-  background:#111;
-  border-radius:10px;
-  padding:6px;
-  margin-bottom:0px;
-  position:relative;
-}
-
-video#player{
-  width:100%;
-  height:320px;      /* MOBILE FIXED HEIGHT */
-  border-radius:20px;
-  object-fit:cover;
-}
-
-.watermark{
-  position:absolute;
-  right:65px;
-  bottom:125px;
-  width:58px;
-  opacity:9.32;
-}
-
-.playInfo{
-  display:flex;
-  gap:12px;
-  margin-top:8px;
-  background:rgba(255,255,255,0.05);
-  padding:6px;
-  border-radius:8px;
-}
-.playInfo img{
-  width:60px;
-  height:60px;
-  border-radius:6px;
-}
-.title{font-size:16px;font-weight:700}
-
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(120px,1fr));
-  gap:12px;
-  padding:10px;
-}
-.card{
-  background:#111;
-  border-radius:10px;
-  border:1px solid rgba(10,255,157,0.3);
-  padding:10px;
-  text-align:center;
-  cursor:pointer;
-}
-.card:hover{ border-color:#0aff9d; }
-.card img{
-  width:80px;
-  height:80px;
-  object-fit:cover;
-  border-radius:6px;
-}
-.card .name{
-  margin-top:6px;
-  font-size:12px;
-  font-weight:700;
-}
-
-/* PREMIUM TAG */
-.badge{
-  background:#0aff9d;
-  color:#000;
-  padding:2px 6px;
-  border-radius:6px;
-  font-size:10px;
-  display:inline-block;
-  margin-top:4px;
-}
-
-/* PC MODE */
-@media (min-width:768px){
-
-  .main{
-    display:flex;
-    height:calc(100vh - 80px);
-  }
-
-  #videoSection{
-    display:none;
-    width:45%;
-    top:80px;
-    padding:10px;
-  }
-
-  /* PC VIDEO HEIGHT BIG */
-  video#player{
-    height:370px !important;
-    width: 200;
-  }
-
-  #gridContainer{
-    width:55%;
-    height:100%;
-    overflow-y:auto;
-  }
-
-  #categories{ display:none; }
-  #backBtn{ display:none !important; }
+body{margin:0;font-family:Arial,sans-serif;color:#fff;background:linear-gradient(135deg,#050505,#0a0a0a,#000,#0a0a0a,#050505);background-size:400% 400%;animation:moveBG 18s infinite linear;}
+@keyframes moveBG{0%{background-position:0 0;}50%{background-position:400% 400%;}100%{background-position:0 0;}}
+.glass{background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 20px rgba(0,255,200,0.1);}
+header{width:100%;padding:12px;background:#0a0a0a;border-bottom:2px solid #131313;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;box-shadow:0 0 10px #000;}
+.backBtn{background:#0c0c0c;border:1px solid #1a1a1a;padding:6px 12px;border-radius:6px;cursor:pointer;color:#fff;transition:.2s;}
+.backBtn:hover{background:#111;border-color:#0aff9d;}
+.title{font-size:20px;font-weight:bold;letter-spacing:1px;color:#0aff9d;text-transform:uppercase;}
+.searchIcon{font-size:22px;cursor:pointer;}
+.searchBoxWrap{display:none;padding:10px;}
+.searchBox{width:100%;padding:12px;border-radius:10px;border:1px solid #222;background:#0d0d0d;color:#0aff9d;}
+#container{display:flex;flex-direction:column;gap:12px;}
+#playerBox{width:100%;display:none;position:sticky;top:60px;z-index:900;}
+#playerWrap{position:relative;background:#000;}
+#video{width:100%;max-height:320px;background:#000;}
+#watermark{position:absolute;bottom:10px;right:30px;width:70px;opacity:.85;}
+#currentInfo{display:flex;gap:10px;align-items:center;padding:12px;background:#0b0b0b;border-top:1px solid #111;}
+#currentLogo{width:45px;border-radius:8px;}
+#categoryTabs{display:flex;gap:8px;overflow-x:auto;padding:10px 12px;margin-bottom:8px;position:sticky;top:0;background:#fff;z-index:10;-webkit-overflow-scrolling:touch;}
+#categoryTabs::-webkit-scrollbar{display:none;}
+.categoryBtn{flex:0 0 auto;padding:6px 14px;border-radius:20px;border:none;cursor:pointer;background:#fff;color:#0a0a0a;font-weight:bold;transition:.2s;white-space:nowrap;font-size:14px;}
+.categoryBtn.active,.categoryBtn:hover{background:#0aff9d;color:#000;}
+#channelBox{background:#fff;color:#000;padding:12px;border-radius:12px;margin:12px;max-height:calc(100vh - 115px);overflow-y:auto;}
+#list{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
+.channelItem{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,0.1);padding:10px;border-radius:12px;text-align:center;cursor:pointer;transition:.2s;}
+.channelItem:hover{transform:scale(1.05);border-color:#0aff9d;box-shadow:0 0 15px rgba(0,255,200,0.2);}
+.channelItem img{width:60px;height:60px;border-radius:10px;}
+.channelName{margin-top:8px;font-size:14px;}
+footer{text-align:center;padding:12px;background:#0a0a0a;color:#0aff9d;font-size:14px;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;}
+footer img{width:25px;}
+@media(min-width:1000px){
+#container{flex-direction:row;}
+#playerBox{width:100%;display:none;position:sticky;top:60px;}
+#channelBox{width:100%;max-height:100vh;overflow-y:auto;}
+#playerWrap video{max-height:none;}
 }
 </style>
 </head>
-
 <body>
-
-<!-- HEADER -->
-<div class="header">
-  <div style="display:flex;align-items:center;gap:10px;">
-    <button id="backBtn" class="iconBtn" style="display:none" onclick="onBack()">←</button>
-    <div class="brand">Biostar TV World</div>
-  </div>
-  <div class="search"><input id="search" placeholder="Search..." oninput="onSearch()"></div>
+<header class="glass">
+<div class="backBtn" onclick="goBack()">⟵ Back</div>
+<div class="title">Biostar TV World</div>
+<div class="searchIcon" onclick="toggleSearch()">🔍</div>
+</header>
+<div class="searchBoxWrap glass" id="searchBoxWrap">
+<input type="text" class="searchBox" placeholder="Search channels..." onkeyup="searchChannel()">
 </div>
-
-<!-- CATEGORY (mobile only) -->
-<div id="categories" class="categoryRow">
-  <div class="cat" onclick="filter('all')">All</div>
-  <div class="cat" onclick="filter('sports')">Sports</div>
-  <div class="cat" onclick="filter('movies')">Movies</div>
-  <div class="cat" onclick="filter('bangla')">Bangla</div>
-  <div class="cat" onclick="filter('kids')">Kids</div>
+<div id="container">
+<div id="playerBox" class="glass">
+<div id="playerWrap">
+<video id="video" controls autoplay></video>
+<img id="watermark" src="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-300x190.webp">
 </div>
-
-<div class="main">
-
-  <!-- VIDEO -->
-  <div id="videoSection">
-    <div class="videoCard">
-      <video id="player" controls playsinline></video>
-      <img class="watermark" src="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-300x190.webp">
-
-      <div class="playInfo">
-        <img id="playLogo">
-        <div id="playTitle" class="title">Channel Name</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CHANNEL LIST -->
-  <div id="gridContainer">
-    <div id="grid" class="grid">Loading…</div>
-  </div>
-
+<div id="currentInfo">
+<img id="currentLogo">
+<span id="currentName"></span>
 </div>
-
+</div>
+<div id="channelBox" class="glass">
+<div id="categoryTabs"></div>
+<div id="list"></div>
+</div>
+</div>
+<footer>
+<img src="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-300x190.webp"> © Biostar TV World 2025
+</footer>
 <script>
-let channels=[],filtered=[],hls=null;
 const playlistURL="https://raw.githack.com/abusaeeidx/Mrgify-BDIX-IPTV/main/playlist.m3u";
-
-const grid=document.getElementById('grid');
-const videoSection=document.getElementById('videoSection');
-const player=document.getElementById('player');
-const playLogo=document.getElementById('playLogo');
-const playTitle=document.getElementById('playTitle');
-const backBtn=document.getElementById('backBtn');
-
-/* LOAD PLAYLIST */
-async function loadPlaylist(){
-  const res=await fetch(playlistURL);
-  const text=await res.text();
-  const lines=text.split(/\r?\n/);
-
-  channels=[];
-
-  for(let i=0;i<lines.length;i++){
-    if(lines[i].startsWith("#EXTINF")){
-      
-      const name=(lines[i].split(",")[1]||"Channel").trim();
-      const logoMatch=lines[i].match(/tvg-logo="([^"]+)"/);
-      const logo=logoMatch?logoMatch[1]:"https://via.placeholder.com/120";
-      let url=lines[i+1]||"";
-
-      if(!url.startsWith("http")) continue;
-
-      /* CHECK PREMIUM */
-      let premium=false;
-      if(/premium|vip|hd|paid/i.test(lines[i])) premium=true;
-
-      channels.push({name,logo,url,premium});
-    }
-  }
-
-  filtered=channels.slice();
-  renderGrid();
-}
-
-function renderGrid(){
-  grid.innerHTML="";
-
-  filtered.forEach((ch,i)=>{
-    const div=document.createElement("div");
-    div.className="card";
-
-    div.innerHTML=`
-      <img src="${ch.logo}">
-      <div class="name">${ch.name}</div>
-      ${ch.premium ? '<div class="badge">PREMIUM</div>' : ''}
-    `;
-
-    div.onclick=()=>onPlay(i);
-    grid.appendChild(div);
-  });
-}
-
-/* SEARCH */
-function onSearch(){
-  const q=document.getElementById("search").value.toLowerCase();
-  filtered=channels.filter(c=>c.name.toLowerCase().includes(q));
-  renderGrid();
-}
-
-/* CATEGORY FILTER */
-function filter(cat){
-  if(cat==="all") filtered=channels.slice();
-  else filtered=channels.filter(c=>c.name.toLowerCase().includes(cat));
-  renderGrid();
-}
-
-/* PLAY */
-function onPlay(i){
-  const ch=filtered[i];
-
-  if(window.innerWidth < 768){
-    videoSection.style.display="flex";
-    document.getElementById("categories").style.display="none";
-    backBtn.style.display="inline-block";
-  } else {
-    videoSection.style.display="flex";
-  }
-
-  playLogo.src=ch.logo;
-  playTitle.textContent=ch.name;
-
-  if(hls){hls.destroy();hls=null;}
-
-  if(Hls.isSupported()){
-    hls=new Hls();
-    hls.loadSource(ch.url);
-    hls.attachMedia(player);
-    hls.on(Hls.Events.MANIFEST_PARSED,()=>player.play());
-  }else{
-    player.src=ch.url;
-    player.play();
-  }
-}
-
-/* BACK FOR MOBILE */
-function onBack(){
-  player.pause();
-  player.src="";
-  videoSection.style.display="none";
-  document.getElementById("categories").style.display="flex";
-  backBtn.style.display="none";
-}
-
+let channels=[],categories=["All"];
+function toggleSearch(){let box=document.getElementById("searchBoxWrap");box.style.display=(box.style.display==="block")?"none":"block";}
+async function loadPlaylist(){const res=await fetch(playlistURL);const text=await res.text();parseM3U(text);}
+function parseM3U(data){let lines=data.split("\n");for(let i=0;i<lines.length;i++){if(lines[i].startsWith("#EXTINF")){let info=lines[i];let url=lines[i+1].trim();let name=info.split(",").slice(-1)[0];let logo="";let cat="Other";let logoMatch=info.match(/tvg-logo="(.*?)"/);let catMatch=info.match(/group-title="(.*?)"/);if(logoMatch)logo=logoMatch[1];if(catMatch)cat=catMatch[1];if(!categories.includes(cat))categories.push(cat);channels.push({name,logo,url,category:cat});}}renderCategories();renderList(channels);}
+function renderCategories(){const tabs=document.getElementById("categoryTabs");tabs.innerHTML="";categories.forEach(c=>{let btn=document.createElement("button");btn.className="categoryBtn";btn.innerText=c;btn.onclick=()=>filterCategory(c);if(c==="All")btn.classList.add("active");tabs.appendChild(btn);});}
+function filterCategory(cat){document.querySelectorAll(".categoryBtn").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".categoryBtn").forEach(b=>{if(b.innerText===cat)b.classList.add("active");});if(cat==="All")renderList(channels);else renderList(channels.filter(ch=>ch.category===cat));}
+function renderList(list){const box=document.getElementById("list");box.innerHTML="";list.forEach(c=>{let item=document.createElement("div");item.className="channelItem glass";item.innerHTML=`<img src="${c.logo}"><div class="channelName">${c.name}</div>`;item.onclick=()=>playChannel(c);box.appendChild(item);});}
+function playChannel(ch){document.getElementById("playerBox").style.display="block";const video=document.getElementById("video");const logo=document.getElementById("currentLogo");const name=document.getElementById("currentName");logo.src=ch.logo;name.innerText=ch.name;if(Hls.isSupported()){var hls=new Hls();hls.loadSource(ch.url);hls.attachMedia(video);}else{video.src=ch.url;}window.scrollTo({top:0,behavior:"smooth"});}
+function searchChannel(){let v=document.querySelector(".searchBox").value.toLowerCase();let f=channels.filter(c=>c.name.toLowerCase().includes(v));renderList(f);}
+function goBack(){document.getElementById("playerBox").style.display="none";window.scrollTo({top:0,behavior:"smooth"});}
 loadPlaylist();
 </script>
-
 </body>
 </html>
