@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="google-site-verification" content="mJfeKwLuQa2NVq4sCvPBuE1zIe9lCJtVBE4PwuRfZCc" />
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-1.webp">
+<title>Biostar TV World</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<link rel="stylesheet" href="https://eamintalukdar.pages.dev/bdixtv/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://eamintalukdar.pages.dev/bdixtv/css/video-js.css">
+<link rel="stylesheet" href="https://eamintalukdar.pages.dev/bdixtv/css/style.css">
+<style>
+.janiD { display: block; margin: 10px 0; text-align: center; }
+.embed-responsive { position: relative; width: 100%; height: 0; padding-bottom: 56.25%; }
+.embed-responsive iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.marquee-section { margin-top: 15px; text-align: center; }
+@media (max-width: 768px) { .embed-responsive { padding-bottom: 56.25%; } .marquee-section, .janiD { font-size: 14px; } }
+.glass{background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 20px rgba(0,255,200,0.1);}
+header{width:100%;padding:12px;background:none;border-bottom:2px solid #131313;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;box-shadow:0 0 10px #000;}
+.backBtn{background:none;border:1px solid #1a1a1a;padding:6px 12px;border-radius:6px;cursor:pointer;color:#fff;transition:.2s;display:none;}
+.backBtn:hover{background:#111;border-color:#0aff9d;}
+.title{font-size:20px;font-weight:bold;letter-spacing:1px;color:#0aff9d;text-transform:uppercase;}
+.searchIcon{font-size:22px;cursor:pointer;}
+.searchBoxWrap{display:none;padding:10px;}
+.searchBox{width:100%;padding:12px;border-radius:10px;border:1px solid #222;background:#0d0d0d;color:#0aff9d;}
+#container{display:flex;flex-direction:column;gap:12px;}
+#playerBox{width:100%;display:none;position:sticky;top:60px;z-index:900;}
+#playerWrap{position:relative;background:none;}
+#video{width:100%;max-height:320px;background:none;}
+#watermark{position:absolute;bottom:15px;right:30px;width:50px;opacity:.85;}
+#currentInfo{display:flex;gap:10px;align-items:center;padding:12px;background:blue;color:white;border-top:1px solid:white;}
+#currentLogo{width:45px;border-radius:8px;background:none;padding:3px;}
+#categoryTabs{display:flex;gap:8px;overflow-x:auto;padding:10px 12px;margin-bottom:8px;position:sticky;top:0;background:none;z-index:10;-webkit-overflow-scrolling:touch;}
+#categoryTabs::-webkit-scrollbar{display:none;}
+.categoryBtn{flex:0 0 auto;padding:6px 14px;border-radius:20px;border:white;cursor:pointer;background:white;color:black;font-weight:bold;transition:.2s;white-space:nowrap;font-size:14px;}
+.categoryBtn.active,.categoryBtn:hover{background:white;color: black;}
+#channelBox{background:none;color:rgb(248, 249, 249);padding:12px;border-radius:12px;margin:12px;max-height:calc(100vh - 115px);overflow-y:auto;}
+#list{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
+.channelItem{backdrop-filter:blur(6px);border:1px solid rgba(250, 247, 247, 0.929);padding:10px;border-radius:12px;text-align:center;cursor:pointer;transition:.2s;}
+.channelItem:hover{transform:scale(1.05);border-color:#0aff9d;box-shadow:0 0 15px rgba(0,0,0,0.2);}
+.channelItem img{width:60px;height:60px;border-radius:10px;background:none;padding:3px;}
+.channelName{margin-top:8px;font-size:14px;}
+footer{text-align:center;padding:12px;background:none;color:rgb(245, 246, 247);font-size:14px;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;}
+footer img{width:30px;}
+@media(min-width:1000px){ #container{flex-direction:row;} #playerBox{width:100%;position:sticky;top:100px;} #channelBox{width:100%;max-height:100vh;overflow-y:auto;} #playerWrap video{max-height:none;} }
+</style>
+</head>
+<body>
+<header class="glass">
+<div class="backBtn" id="backBtn" onclick="goBack()">⟵ Back</div>
+<div class="title">Biostar TV World</div>
+<div class="searchIcon" onclick="toggleSearch()">🔍</div>
+</header>
+<div class="searchBoxWrap glass" id="searchBoxWrap">
+<input type="text" class="searchBox" placeholder="Search channels..." onkeyup="searchChannel()">
+</div>
+<div id="container">
+<div id="playerBox" class="glass">
+<div id="playerWrap">
+<video id="video" controls autoplay></video>
+<img id="watermark" src="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-1.webp">
+</div>
+<div id="currentInfo">
+<img id="currentLogo">
+<span id="currentName"></span>
+</div>
+</div>
+<div id="channelBox" class="glass">
+<div id="categoryTabs"></div>
+<div id="list"></div>
+</div>
+</div>
+<footer>
+<img src="https://thebengalee.com/wp-content/uploads/2025/12/Biostar_TV-removebg-preview-1.webp"> © Biostar TV World 2025
+</footer>
+<script>
+const playlistURL="https://raw.githubusercontent.com/abusaeeidx/Mrgify-BDIX-IPTV/refs/heads/main/playlist.m3u";
+let channels=[],categories=["All"];
+function toggleSearch(){let box=document.getElementById("searchBoxWrap");box.style.display=(box.style.display==="block")?"none":"block";}
+async function loadPlaylist(){const res=await fetch(playlistURL);const text=await res.text();parseM3U(text);}
+function parseM3U(data){let lines=data.split("\n");for(let i=0;i<lines.length;i++){if(lines[i].startsWith("#EXTINF")){let info=lines[i];let url=lines[i+1].trim();let name=info.split(",").slice(-1)[0];let logo="";let cat="Other";let logoMatch=info.match(/tvg-logo="(.*?)"/);let catMatch=info.match(/group-title="(.*?)"/);if(logoMatch)logo=logoMatch[1];if(catMatch)cat=catMatch[1];if(!categories.includes(cat))categories.push(cat);channels.push({name,logo,url,category:cat});}}renderCategories();renderList(channels);}
+function renderCategories(){const tabs=document.getElementById("categoryTabs");tabs.innerHTML="";categories.forEach(c=>{let btn=document.createElement("button");btn.className="categoryBtn";btn.innerText=c;btn.onclick=()=>filterCategory(c);if(c==="All")btn.classList.add("active");tabs.appendChild(btn);});}
+function filterCategory(cat){document.querySelectorAll(".categoryBtn").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".categoryBtn").forEach(b=>{if(b.innerText===cat)b.classList.add("active");});if(cat==="All")renderList(channels);else renderList(channels.filter(ch=>ch.category===cat));}
+function renderList(list){const box=document.getElementById("list");box.innerHTML="";list.forEach(c=>{let item=document.createElement("div");item.className="channelItem glass";item.innerHTML=`<img src="${c.logo}"><div class="channelName">${c.name}</div>`;item.onclick=()=>playChannel(c);box.appendChild(item);});}
+function playChannel(ch){document.getElementById("playerBox").style.display="block";document.getElementById("backBtn").style.display="block";const video=document.getElementById("video");const logo=document.getElementById("currentLogo");const name=document.getElementById("currentName");logo.src=ch.logo;name.innerText=ch.name;if(Hls.isSupported()){var hls=new Hls();hls.loadSource(ch.url);hls.attachMedia(video);}else{video.src=ch.url;}window.scrollTo({top:0,behavior:"smooth"});}
+function searchChannel(){let v=document.querySelector(".searchBox").value.toLowerCase();let f=channels.filter(c=>c.name.toLowerCase().includes(v));renderList(f);}
+function goBack(){document.getElementById("playerBox").style.display="none";document.getElementById("backBtn").style.display="none";window.scrollTo({top:0,behavior:"smooth"});}
+loadPlaylist();
+</script>
+</body>
+</html>
